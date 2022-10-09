@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {setData} from './tmpdata/mock';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+setData();
 root.render(
   <React.StrictMode>
     <App />

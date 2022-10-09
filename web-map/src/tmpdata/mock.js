@@ -1,23 +1,26 @@
+import toiletData from './toiletData.json';
+
 const {kakao} = window;
 
-const sogangUniv = {
-  id: '1',
-  name: 'sogangUniv',
-  lating: new kakao.maps.LatLng(37.551629, 126.937933),
-};
+const datas = [];
 
-const WooZip = {
-  id: '2',
-  name: 'WooZip',
-  lating: new kakao.maps.LatLng(37.55157, 126.936881),
-};
+export function setData() {
+  datas.splice(0, datas.length);
+  const keyList = Object.keys(toiletData);
 
-const HoZip = {
-  id: '3',
-  name: 'HoZip',
-  lating: new kakao.maps.LatLng(37.548972, 126.937359),
-};
-
-const datas = [sogangUniv, WooZip, HoZip];
-
+  keyList.forEach(key => {
+    const toilet = toiletData[key];
+    if (toilet.xcor !== 'error') {
+      const data = {
+        id: key,
+        name: toilet['화장실명'],
+        lating: new kakao.maps.LatLng(
+          parseFloat(toilet.ycor),
+          parseFloat(toilet.xcor),
+        ),
+      };
+      datas.push(data);
+    }
+  });
+}
 export default datas;

@@ -16,7 +16,7 @@ const Map = () => {
     const center = datas[0].lating;
     const options = {
       center,
-      level: 1,
+      level: 6,
     };
     const map = new kakao.maps.Map(container.current, options);
 
