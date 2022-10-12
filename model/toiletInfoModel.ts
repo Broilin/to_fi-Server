@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-const dataPath = path.join(process.cwd(), "model", "dummyData.json");
+const dataPath = path.join(process.cwd(), "model", "toiletData.json");
 
 interface ReviewData {
   id: number;
@@ -22,9 +22,8 @@ export default class toiletInfo {
       //  Read datas
       const fileData = fs.readFileSync(dataPath, "utf-8");
       const datas = JSON.parse(fileData);
-
       //  find data by ID
-      const returnData = datas.find((data: ToiletData) => data.id === id);
+      const returnData = datas[id];
 
       if (!returnData) throw "No such data!";
       return returnData;
