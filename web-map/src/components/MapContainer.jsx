@@ -1,5 +1,6 @@
 import {useEffect, useRef} from 'react';
 import styled from 'styled-components';
+import readToiletInfo from '../data/getData';
 import datas from '../tmpdata/mock';
 
 const {kakao} = window;
@@ -9,7 +10,7 @@ const MapContainer = styled.div({
   height: '100vh',
 });
 
-const Map = () => {
+const Map = async () => {
   const container = useRef(null);
 
   const initMap = () => {
@@ -43,7 +44,8 @@ const Map = () => {
       });
     });
   };
-  useEffect(() => {
+  useEffect(async () => {
+    await readToiletInfo();
     initMap();
   }, []);
 
