@@ -1,9 +1,11 @@
 import express from "express";
 
-import { getToiletInfo } from "../controller/toiletInfoController";
+import { getToiletInfo, getPositionAll } from "../controller/toiletController";
 
 const router = express.Router();
 
 router.get("/info/:toiletId", getToiletInfo);
+
+router.get("/position/all", getPositionAll);
 
 export default router;

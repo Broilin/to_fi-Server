@@ -1,7 +1,6 @@
 import {useEffect, useRef} from 'react';
 import styled from 'styled-components';
-import readToiletInfo from '../data/getData';
-import datas from '../tmpdata/mock';
+import axios from 'axios';
 
 const {kakao} = window;
 
@@ -10,19 +9,27 @@ const MapContainer = styled.div({
   height: '100vh',
 });
 
-const Map = async () => {
+const Map = () => {
   const container = useRef(null);
 
-  const initMap = () => {
-    const center = datas[0].lating;
+  const initMap = datas => {
+    const centerlating = new kakao.maps.LatLng(
+      parseFloat(datas[0].y),
+      parseFloat(datas[0].x),
+    );
+    const center = centerlating;
     const options = {
       center,
-      level: 6,
+      level: 3,
     };
     const map = new kakao.maps.Map(container.current, options);
 
     datas.forEach(function (data) {
-      const markerPosition = data.lating;
+      const lating = new kakao.maps.LatLng(
+        parseFloat(data.y),
+        parseFloat(data.x),
+      );
+      const markerPosition = lating;
 
       const marker = new kakao.maps.Marker({
         position: markerPosition,
@@ -39,14 +46,22 @@ const Map = async () => {
       kakao.maps.event.addListener(marker, 'click', function () {
         infoWindow.open(map, marker);
         if (window.ReactNativeWebView) {
-          window.ReactNativeWebView.postMessage(JSON.stringify({id: data.id}));
+          window.ReactNativeWebView.postMessage(
+            JSON.stringify({id: +data.id[0]}),
+          );
         }
       });
     });
   };
-  useEffect(async () => {
-    await readToiletInfo();
-    initMap();
+  useEffect(() => {
+    axios
+      .get('/position/all')
+      .then(result => {
+        const datas = JSON.parse(result.data);
+        console.log(datas);
+        initMap(datas.rows);
+      })
+      .catch(err => console.log(err));
   }, []);
 
   return <MapContainer id="KakaoMap" ref={container} />;
