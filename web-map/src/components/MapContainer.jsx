@@ -46,9 +46,7 @@ const Map = () => {
       kakao.maps.event.addListener(marker, 'click', function () {
         infoWindow.open(map, marker);
         if (window.ReactNativeWebView) {
-          window.ReactNativeWebView.postMessage(
-            JSON.stringify({id: +data.id[0]}),
-          );
+          window.ReactNativeWebView.postMessage(JSON.stringify({id: data.id}));
         }
       });
     });
