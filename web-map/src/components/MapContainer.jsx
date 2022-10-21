@@ -1,6 +1,7 @@
 import {useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import makeMarker from './markerMaker';
 
 const {kakao} = window;
 
@@ -11,7 +12,8 @@ const MapContainer = styled.div({
 
 const Map = () => {
   const container = useRef(null);
-
+  const infoWindows = useRef([]);
+  const markers = useRef([]);
   const initMap = datas => {
     const centerlating = new kakao.maps.LatLng(
       parseFloat(datas[0].y),
@@ -24,42 +26,29 @@ const Map = () => {
     };
     const map = new kakao.maps.Map(container.current, options);
 
-    datas.forEach(function (data) {
-      const lating = new kakao.maps.LatLng(
-        parseFloat(data.y),
-        parseFloat(data.x),
-      );
-      const markerPosition = lating;
+    datas.forEach(data =>
+      makeMarker(data, {map}, infoWindows.current, markers.current),
+    );
 
-      const marker = new kakao.maps.Marker({
-        position: markerPosition,
-        clickable: true,
-      });
-
-      marker.setMap(map);
-
-      const iwContent = `<div style = "padding:5px;">${data.name}</div>`;
-      const infoWindow = new kakao.maps.InfoWindow({
-        content: iwContent,
-        removable: true,
-      });
-      kakao.maps.event.addListener(marker, 'click', function () {
-        infoWindow.open(map, marker);
-        if (window.ReactNativeWebView) {
-          window.ReactNativeWebView.postMessage(JSON.stringify({id: data.id}));
-        }
-      });
+    const clusterer = new kakao.maps.MarkerClusterer({
+      map,
+      gridSize: 80,
+      averageCenter: true,
+      minLevel: 4,
     });
+
+    clusterer.addMarkers(markers.current.map(marker => marker));
   };
   useEffect(() => {
     axios
       .get('/position/all')
       .then(result => {
         const datas = JSON.parse(result.data);
-        console.log(datas);
         initMap(datas.rows);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        throw err;
+      });
   }, []);
 
   return <MapContainer id="KakaoMap" ref={container} />;
