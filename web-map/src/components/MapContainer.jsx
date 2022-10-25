@@ -41,8 +41,9 @@ const Map = () => {
   };
   useEffect(() => {
     axios
-      .get('/position/all')
+      .get('/info/all')
       .then(result => {
+        console.log(result);
         const datas = JSON.parse(result.data);
         initMap(datas.rows);
       })
