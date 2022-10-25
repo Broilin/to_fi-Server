@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 
-import toiletInfo from "../model/toiletInfoModel";
 import pool from "../model/database/db";
 
 const getInfo = async (req: Request, res: Response) => {
