@@ -1,8 +1,16 @@
 import express from "express";
 
-import { postReview } from "../controller/ReviewController";
+import {
+  getPreview,
+  getReviewAll,
+  postReview,
+} from "../controller/ReviewController";
 
 const router = express.Router();
+
+router.get("/review/:toiletId", getPreview);
+
+router.get("/review/all/:toiletId", getReviewAll);
 
 router.post("/review/:toiletId", postReview);
 
