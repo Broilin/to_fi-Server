@@ -13,8 +13,10 @@ const signInRequest = async (req: Request, res: Response) => {
         req.body.password,
         queryResult.rows[0].password,
         function (err, compResult) {
-          if (compResult === true)
+          if (compResult === true) {
+            console.log(queryResult.rows[0]);
             res.json(JSON.stringify(queryResult.rows[0]));
+          }
         }
       );
     })
